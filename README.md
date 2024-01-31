@@ -28,6 +28,12 @@ The script reads the input text, identifies phrases to be standardized, suggests
 - `standardize_text.py`: Main script for suggesting changes in the input text using standardized phrases.
 - `embeddings.py`: Contains the EmbeddingsModel class for generating sentence embeddings using pre-trained transformer models.
 
+## Model
+The model aims to train sentence embedding models on very large sentence level datasets using a self-supervised contrastive learning objective. 
+It developed on pretrained nreimers/MiniLM-L6-H384-uncased model and fine-tuned in on a 1B sentence pairs dataset. 
+it developed used a contrastive learning objective: given a sentence from the pair, the model should predict which out of a set of randomly sampled other sentences, 
+was actually paired with it in their dataset.
+
 ## Example 
 
 Files for example are in input_files directory
