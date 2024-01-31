@@ -55,6 +55,7 @@ if __name__ == '__main__':
                         help='Input text for suggestions or path to the file with text')
     parser.add_argument("--terms_csv", type=str, default="input_files/Standardised terms.csv",
                         help="Path to the csv file which will contain standard terms")
+    parser.add_argument("--threshold", type=float, default=0.45, help="Choose threshold for suggestions score")
 
     args = parser.parse_args()
 
@@ -71,7 +72,7 @@ if __name__ == '__main__':
         text = args.input
 
     # Get suggestions for standardized phrases
-    suggestions = standard.give_standardised_suggestions(text)
+    suggestions = standard.give_standardised_suggestions(text, threshold=args.threshold)
     ignore_suggestions_index = []
 
     for i, suggestion in enumerate(suggestions):
