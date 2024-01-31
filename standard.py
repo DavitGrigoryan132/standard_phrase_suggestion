@@ -46,4 +46,4 @@ class StandardisedPhrases:
 
                 window_start += 1
 
-        print(suggestions)
+        return suggestions
