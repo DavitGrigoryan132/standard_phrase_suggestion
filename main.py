@@ -2,9 +2,19 @@ import os
 import re
 import argparse
 from standard import StandardisedPhrases
+from typing import List, Tuple
 
 
-def highlight_suggestion(original_text, original_term, suggestion, score):
+def highlight_suggestion(original_text: str, original_term: str, suggestion: str, score: float) -> None:
+    """
+    Print the original text with the suggested replacement highlighted and its corresponding score.
+
+    Parameters:
+        original_text (str): The original text.
+        original_term (str): The term in the original text being replaced.
+        suggestion (str): The suggested replacement.
+        score (float): The similarity score for the suggestion.
+    """
     start_index = original_text.find(original_term)
     caret_spaces = ' ' * start_index
 
@@ -14,7 +24,19 @@ def highlight_suggestion(original_text, original_term, suggestion, score):
     print()
 
 
-def apply_suggestions(input_text, suggestions, ignore_indexes):
+def apply_suggestions(input_text: str, suggestions: List[Tuple[str, str, float]], ignore_indexes: List[int]) -> str:
+    """
+    Apply the accepted suggestions to the input text.
+
+    Parameters:
+        input_text (str): The input text.
+        suggestions (List[Tuple[str, str, float]]): List of suggestions, each containing input phrase,
+                                                    suggested phrase, and score.
+        ignore_indexes (List[int]): List of indexes of suggestions to be ignored.
+
+    Returns:
+        str: The text with applied suggestions.
+    """
     output = input_text
     for i, suggestion in enumerate(suggestions):
         if i not in ignore_indexes:
@@ -36,7 +58,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    # Initialize StandardisedPhrases class
     standard = StandardisedPhrases()
+
+    # Read standardized phrases from the CSV file
     standard.read_phrases(args.terms_csv)
 
     if os.path.isfile(args.input):
@@ -45,6 +70,7 @@ if __name__ == '__main__':
     else:
         text = args.input
 
+    # Get suggestions for standardized phrases
     suggestions = standard.give_standardised_suggestions(text)
     ignore_suggestions_index = []
 
@@ -61,11 +87,13 @@ if __name__ == '__main__':
         if end_index != len(text):
             substring += "..."
 
-        highlight_suggestion(substring, suggestion[0], suggestion[1], suggestion[2].numpy())
+        # Highlight the suggestion and ask user for acceptance
+        highlight_suggestion(substring, suggestion[0], suggestion[1], suggestion[2])
 
         answer = input("Do you want to apply suggestion? (y/n) ")
         if answer != "y":
             ignore_suggestions_index.append(i)
 
+    # Apply accepted suggestions to the text
     result = apply_suggestions(text, suggestions, ignore_suggestions_index)
     print(result)
